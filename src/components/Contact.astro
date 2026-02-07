@@ -1,0 +1,267 @@
+---
+// Contact form component
+---
+
+<section id="contacto" class="section">
+  <div class="container">
+    <div class="contact-wrapper">
+      <div class="contact-info fade-in-left">
+        <span class="section-badge">Contacto</span>
+        <h2 class="section-title">¿Listo para Empezar?</h2>
+        <p class="contact-description">
+          Únete a la familia UCAM Natación. Completa el formulario y nos pondremos en contacto contigo lo antes posible.
+        </p>
+
+        <div class="contact-details">
+          <div class="contact-detail-item">
+            <div class="contact-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="contact-detail-title">Ubicación</h3>
+              <p class="contact-detail-text">Piscina UCAM<br/>Campus de Los Jerónimos<br/>Murcia, España</p>
+            </div>
+          </div>
+
+          <div class="contact-detail-item">
+            <div class="contact-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M22 16.92V19.92C22 20.4728 21.5523 20.9203 21 20.9203H3C2.44772 20.9203 2 20.4728 2 19.92V16.92M22 7.92V4.92C22 4.36772 21.5523 3.92 21 3.92H3C2.44772 3.92 2 4.36772 2 4.92V7.92M2 12H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 12V16M12 8V16M17 10V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="contact-detail-title">Horario de Atención</h3>
+              <p class="contact-detail-text">Lunes a Viernes: 9:00 - 21:00<br/>Sábados: 9:00 - 14:00</p>
+            </div>
+          </div>
+
+          <div class="contact-detail-item">
+            <div class="contact-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="contact-detail-title">Email</h3>
+              <p class="contact-detail-text">info@ucamnatacion.es</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrapper fade-in-right">
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <label for="name" class="form-label">Nombre completo</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              class="form-input" 
+              required 
+              placeholder="Tu nombre"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              required 
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Teléfono</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              class="form-input" 
+              placeholder="+34 600 000 000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">Mensaje</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              class="form-textarea" 
+              required 
+              placeholder="Cuéntanos cómo podemos ayudarte..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <span class="btn-text">Enviar Mensaje</span>
+            <span class="btn-loading" style="display: none;">
+              <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="0">
+                  <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+                </circle>
+              </svg>
+              Enviando...
+            </span>
+          </button>
+
+          <div class="form-message" id="form-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  .contact-info {
+    max-width: 500px;
+  }
+
+  .contact-description {
+    font-size: var(--text-lg);
+    color: var(--color-gray);
+    margin-bottom: var(--space-xl);
+    line-height: 1.6;
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .contact-detail-item {
+    display: flex;
+    gap: var(--space-md);
+  }
+
+  .contact-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-lg);
+  }
+
+  .contact-detail-title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: var(--space-xs);
+  }
+
+  .contact-detail-text {
+    font-size: var(--text-sm);
+    color: var(--color-gray);
+    line-height: 1.6;
+  }
+
+  .contact-form-wrapper {
+    background: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .form-message {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .form-message.success {
+    display: block;
+    background: rgba(6, 214, 160, 0.1);
+    color: var(--color-success);
+  }
+
+  .form-message.error {
+    display: block;
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 1024px) {
+    .contact-wrapper {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const message = document.getElementById('form-message') as HTMLDivElement;
+  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
+  const btnText = submitBtn?.querySelector('.btn-text') as HTMLSpanElement;
+  const btnLoading = submitBtn?.querySelector('.btn-loading') as HTMLSpanElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Get form data
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      message: formData.get('message') as string,
+    };
+
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline-flex';
+    message.style.display = 'none';
+
+    try {
+      // Insert into Supabase
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([data]);
+
+      if (error) throw error;
+
+      // Success
+      message.className = 'form-message success';
+      message.textContent = '¡Mensaje enviado! Nos pondremos en contacto contigo pronto.';
+      message.style.display = 'block';
+      form.reset();
+
+    } catch (error) {
+      // Error
+      message.className = 'form-message error';
+      message.textContent = 'Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.';
+      message.style.display = 'block';
+      console.error('Error:', error);
+    } finally {
+      // Reset button state
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+    }
+  });
+</script>

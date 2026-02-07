@@ -1,0 +1,127 @@
+---
+// Services / Programs section with Bento Grid
+---
+
+<section id="services" class="section services">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Nuestros Programas</h2>
+            <p class="section-desc">Diseñados para elevar tu potencial.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-item bento-item--large">
+                <div class="bento-content">
+                    <h3>Alto Rendimiento</h3>
+                    <p>Entrenamiento intensivo para competidores.</p>
+                    <a href="#" class="arrow-link">→</a>
+                </div>
+                <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=2070&auto=format&fit=crop"
+                    alt="Swimming lanes" class="bento-bg">
+            </div>
+            <div class="bento-item">
+                <div class="bento-content">
+                    <h3>Clases Grupales</h3>
+                    <p>Aprende y socializa en el agua.</p>
+                </div>
+                <div class="bento-overlay"></div>
+            </div>
+            <div class="bento-item">
+                <div class="bento-content">
+                    <h3>Personal Trainer</h3>
+                    <p>Atención 1 a 1 para perfeccionar tu técnica.</p>
+                </div>
+                <div class="bento-overlay"></div>
+            </div>
+            <div class="bento-item bento-item--wide">
+                <div class="bento-content">
+                    <h3>Recuperación & Spa</h3>
+                    <p>Relájate después del esfuerzo.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1600965962102-9d260a3015b7?q=80&w=2070&auto=format&fit=crop"
+                    alt="Spa area" class="bento-bg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.services {
+    background-color: var(--color-bg-alt);
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    grid-auto-rows: 300px;
+}
+
+@media (min-width: 768px) {
+    .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 350px;
+    }
+
+    .bento-item--large {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+
+    .bento-item--wide {
+        grid-column: span 3;
+    }
+}
+
+.bento-item {
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bento-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.bento-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bento-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-secondary);
+}
+
+.bento-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.15;
+    transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+.bento-item:hover .bento-bg {
+    opacity: 0.25;
+    transform: scale(1.05);
+}
+
+.arrow-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+</style>

@@ -1,0 +1,313 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { supabase } from '../../lib/supabase';
+
+// Check authentication
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) {
+  return Astro.redirect('/admin/login');
+}
+
+// Fetch images from storage
+const { data: images } = await supabase
+  .storage
+  .from('club-images')
+  .list();
+---
+
+<AdminLayout title="Galería">
+  <div class="admin-header">
+    <div>
+      <h1 class="admin-title">Galería de Imágenes</h1>
+      <p class="admin-subtitle">Gestiona las imágenes del club</p>
+    </div>
+  </div>
+
+  <div class="admin-section">
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <div class="upload-area" id="upload-area">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <path d="M24 8V32M24 8L16 16M24 8L32 16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 32V38C8 39.0609 8.42143 40.0783 9.17157 40.8284C9.92172 41.5786 10.9391 42 12 42H36C37.0609 42 38.0783 41.5786 38.8284 40.8284C39.5786 40.0783 40 39.0609 40 38V32" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>Arrastra imágenes aquí</h3>
+        <p>o haz clic para seleccionar</p>
+        <input type="file" id="file-input" accept="image/*" multiple hidden />
+      </div>
+      
+      <div class="upload-progress" id="upload-progress" style="display: none;">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p id="progress-text">Subiendo...</p>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-grid" id="gallery-grid">
+      {images && images.length > 0 ? (
+        images.map((image) => {
+          const publicUrl = `${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/club-images/${image.name}`;
+          return (
+            <div class="gallery-item" data-name={image.name}>
+              <img src={publicUrl} alt={image.name} loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-btn copy-url-btn" data-url={publicUrl} title="Copiar URL">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M8 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V16C2 16.5304 2.21071 17.0391 2.58579 17.4142C2.96086 17.7893 3.46957 18 4 18H14C14.5304 18 15.0391 17.7893 15.4142 17.4142C15.7893 17.0391 16 16.5304 16 16V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 2L10 10M18 2H14M18 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="gallery-btn delete-img-btn" data-name={image.name} title="Eliminar">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 5H17.5M15.8333 5V16.6667C15.8333 17.5 15 18.3333 14.1667 18.3333H5.83333C5 18.3333 4.16667 17.5 4.16667 16.6667V5M6.66667 5V3.33333C6.66667 2.5 7.5 1.66667 8.33333 1.66667H11.6667C12.5 1.66667 13.3333 2.5 13.3333 3.33333V5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <div class="gallery-empty">
+          <p>No hay imágenes todavía. Sube la primera imagen arriba.</p>
+        </div>
+      )}
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const uploadProgress = document.getElementById('upload-progress');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const galleryGrid = document.getElementById('gallery-grid');
+
+  // Click to upload
+  uploadArea?.addEventListener('click', () => fileInput?.click());
+
+  // Drag and drop
+  uploadArea?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea?.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const files = e.dataTransfer?.files;
+    if (files) handleFiles(files);
+  });
+
+  // File input change
+  fileInput?.addEventListener('change', (e) => {
+    const files = (e.target as HTMLInputElement).files;
+    if (files) handleFiles(files);
+  });
+
+  // Handle file upload
+  async function handleFiles(files: FileList) {
+    if (!files.length) return;
+
+    uploadProgress!.style.display = 'block';
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileName = `${Date.now()}-${file.name}`;
+
+      try {
+        progressText!.textContent = `Subiendo ${i + 1}/${files.length}...`;
+        progressFill!.style.width = `${((i + 1) / files.length) * 100}%`;
+
+        const { error } = await supabase.storage
+          .from('club-images')
+          .upload(fileName, file);
+
+        if (error) throw error;
+
+      } catch (error) {
+        console.error('Error uploading:', error);
+        alert(`Error al subir ${file.name}`);
+      }
+    }
+
+    // Reload page
+    window.location.reload();
+  }
+
+  // Copy URL
+  document.querySelectorAll('.copy-url-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const url = (e.currentTarget as HTMLButtonElement).dataset.url!;
+      await navigator.clipboard.writeText(url);
+      alert('URL copiada al portapapeles');
+    });
+  });
+
+  // Delete image
+  document.querySelectorAll('.delete-img-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const name = (e.currentTarget as HTMLButtonElement).dataset.name!;
+      
+      if (confirm('¿Eliminar esta imagen?')) {
+        try {
+          const { error } = await supabase.storage
+            .from('club-images')
+            .remove([name]);
+
+          if (error) throw error;
+          window.location.reload();
+        } catch (error) {
+          alert('Error al eliminar la imagen');
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .admin-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .admin-title {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: var(--space-xs);
+  }
+
+  .admin-subtitle {
+    color: var(--color-gray);
+    font-size: var(--text-lg);
+  }
+
+  .admin-section {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .upload-section {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .upload-area {
+    border: 3px dashed var(--color-gray-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-3xl);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    color: var(--color-gray);
+  }
+
+  .upload-area:hover,
+  .upload-area.dragover {
+    border-color: var(--color-primary);
+    background: rgba(0, 102, 204, 0.05);
+    color: var(--color-primary);
+  }
+
+  .upload-area h3 {
+    font-size: var(--text-xl);
+    margin: var(--space-md) 0 var(--space-xs);
+  }
+
+  .upload-progress {
+    margin-top: var(--space-lg);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-gray-light);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-sm);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    transition: width var(--transition-base);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+  }
+
+  .gallery-btn:hover {
+    background: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .gallery-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-3xl);
+    color: var(--color-gray);
+  }
+</style>

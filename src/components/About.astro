@@ -1,0 +1,89 @@
+---
+// About section with stats
+---
+
+<section id="about" class="section about">
+    <div class="container">
+        <div class="grid grid--2">
+            <div class="about__content">
+                <span class="badget">Sobre Nosotros</span>
+                <h2 class="section-title">Más que un club, <br>una comunidad.</h2>
+                <p class="section-desc">En Web Club Natación, fusionamos la técnica de alto rendimiento con un
+                    ambiente acogedor. Nuestros entrenadores olímpicos diseñan programas personalizados para
+                    cada nivel.</p>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="15">0</span>
+                        <span class="stat-label">Años de Experticia</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="500">0</span>
+                        <span class="stat-label">Miembros Activos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about__image">
+                <div class="image-reveal">
+                    <img src="https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=2070&auto=format&fit=crop"
+                        alt="Swimmer underwater">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.about {
+    background-color: var(--color-bg);
+}
+
+.about__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stats {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-bg-alt);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-top: 5px;
+}
+
+.about__image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+}
+
+.about__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.5s ease;
+}
+
+.about__image:hover img {
+    transform: scale(1.05);
+}
+</style>

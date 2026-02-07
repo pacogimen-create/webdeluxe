@@ -1,0 +1,235 @@
+---
+import { supabase } from '../lib/supabase';
+
+// Fetch gallery images
+const { data: images } = await supabase
+  .storage
+  .from('club-images')
+  .list();
+
+const imageUrls = images?.map(img => 
+  `${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/club-images/${img.name}`
+) || [];
+---
+
+<section id="galeria" class="section">
+  <div class="container">
+    <div class="section-header text-center fade-in-up">
+      <span class="section-badge">Galería</span>
+      <h2 class="section-title">Momentos Inolvidables</h2>
+      <p class="section-subtitle">
+        Descubre los mejores momentos de nuestro club
+      </p>
+    </div>
+
+    <div class="gallery-masonry stagger-container">
+      {imageUrls.length > 0 ? (
+        imageUrls.map((url, index) => (
+          <div class="gallery-item stagger-item" data-index={index}>
+            <img src={url} alt={`Galería ${index + 1}`} loading="lazy" />
+            <div class="gallery-item-overlay">
+              <button class="gallery-zoom-btn" data-url={url}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="11" cy="11" r="8" stroke="white" stroke-width="2"/>
+                  <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M11 8V14M8 11H14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div class="gallery-placeholder">
+          <p>Próximamente añadiremos fotos de nuestros entrenamientos y competiciones.</p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M24 8L8 24M8 8L24 24" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img src="" alt="Imagen ampliada" id="lightbox-img" />
+  </div>
+</section>
+
+<script>
+  // Lightbox functionality
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxClose = document.getElementById('lightbox-close');
+
+  document.querySelectorAll('.gallery-zoom-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url = (btn as HTMLButtonElement).dataset.url!;
+      lightboxImg.src = url;
+      lightbox!.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  lightboxClose?.addEventListener('click', () => {
+    lightbox!.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+
+<style>
+  .section-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-title {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: var(--space-sm);
+  }
+
+  .section-subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-gray);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .gallery-masonry {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  .gallery-zoom-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+  }
+
+  .gallery-zoom-btn:hover {
+    background: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  .gallery-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-3xl);
+    color: var(--color-gray);
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+  }
+
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+  }
+
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+  }
+
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-masonry {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+</style>

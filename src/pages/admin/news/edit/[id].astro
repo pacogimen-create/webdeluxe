@@ -1,0 +1,272 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { supabase } from '../../../lib/supabase';
+
+// Check authentication
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) {
+  return Astro.redirect('/admin/login');
+}
+
+// Get news ID from URL
+const { id } = Astro.params;
+
+// Fetch news item
+const { data: news } = await supabase
+  .from('news')
+  .select('*')
+  .eq('id', id)
+  .single();
+
+if (!news) {
+  return Astro.redirect('/admin/news');
+}
+---
+
+<AdminLayout title="Editar Noticia">
+  <div class="admin-header">
+    <div>
+      <h1 class="admin-title">Editar Noticia</h1>
+      <p class="admin-subtitle">Modifica la noticia existente</p>
+    </div>
+    <a href="/admin/news" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Volver
+    </a>
+  </div>
+
+  <div class="admin-section">
+    <form id="news-form" class="news-form">
+      <input type="hidden" name="id" value={news.id} />
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title" class="form-label">Título *</label>
+          <input 
+            type="text" 
+            id="title" 
+            name="title" 
+            class="form-input" 
+            required 
+            value={news.title}
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="slug" class="form-label">Slug (URL) *</label>
+          <input 
+            type="text" 
+            id="slug" 
+            name="slug" 
+            class="form-input" 
+            required 
+            value={news.slug}
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="excerpt" class="form-label">Extracto</label>
+          <textarea 
+            id="excerpt" 
+            name="excerpt" 
+            class="form-textarea" 
+            rows="3"
+          >{news.excerpt}</textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="content" class="form-label">Contenido *</label>
+          <textarea 
+            id="content" 
+            name="content" 
+            class="form-textarea" 
+            rows="12"
+            required
+          >{news.content}</textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="image_url" class="form-label">URL de Imagen</label>
+          <input 
+            type="url" 
+            id="image_url" 
+            name="image_url" 
+            class="form-input" 
+            value={news.image_url || ''}
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="published" name="published" checked={news.published} />
+            <span>Publicado</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-message" id="form-message"></div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin/news'">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-text">Guardar Cambios</span>
+          <span class="btn-loading" style="display: none;">
+            <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="0">
+                <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            Guardando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../../lib/supabase';
+
+  const form = document.getElementById('news-form') as HTMLFormElement;
+  const message = document.getElementById('form-message') as HTMLDivElement;
+  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
+  const btnText = submitBtn?.querySelector('.btn-text') as HTMLSpanElement;
+  const btnLoading = submitBtn?.querySelector('.btn-loading') as HTMLSpanElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const id = formData.get('id') as string;
+    const data = {
+      title: formData.get('title') as string,
+      slug: formData.get('slug') as string,
+      excerpt: formData.get('excerpt') as string,
+      content: formData.get('content') as string,
+      image_url: formData.get('image_url') as string || null,
+      published: formData.get('published') === 'on',
+      updated_at: new Date().toISOString(),
+    };
+
+    // Show loading
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline-flex';
+    message.style.display = 'none';
+
+    try {
+      const { error } = await supabase
+        .from('news')
+        .update(data)
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Success - redirect
+      window.location.href = '/admin/news';
+
+    } catch (error: any) {
+      message.className = 'form-message error';
+      message.textContent = error.message || 'Error al actualizar la noticia';
+      message.style.display = 'block';
+      
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+    }
+  });
+</script>
+
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-2xl);
+    gap: var(--space-lg);
+  }
+
+  .admin-title {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: var(--space-xs);
+  }
+
+  .admin-subtitle {
+    color: var(--color-gray);
+    font-size: var(--text-lg);
+  }
+
+  .admin-section {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .news-form {
+    max-width: 800px;
+  }
+
+  .form-row {
+    margin-bottom: var(--space-lg);
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .form-message {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .form-message.error {
+    display: block;
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--color-accent);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+  }
+
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

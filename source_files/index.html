@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Club Natación | Sumérgete en la Excelencia</title>
+    <meta name="description"
+        content="Únete al club de natación más exclusivo. Entrenadores expertos, instalaciones premium y una comunidad apasionada.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="header">
+        <div class="container header__container">
+            <a href="#" class="logo">WCN<span class="dot">.</span></a>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="#about" class="nav__link">Nosotros</a></li>
+                    <li><a href="#services" class="nav__link">Programas</a></li>
+                    <li><a href="#membership" class="nav__link">Membresía</a></li>
+                </ul>
+                <a href="#join" class="btn btn--primary">Únete Ahora</a>
+            </nav>
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero__bg">
+                <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=2070&auto=format&fit=crop"
+                    alt="Swimming Pool" class="hero__img">
+                <div class="hero__overlay"></div>
+            </div>
+            <div class="container hero__content">
+                <div class="hero__text-wrapper">
+                    <h1 class="hero__title">
+                        <span class="hero__line">Domina</span>
+                        <span class="hero__line">El Agua</span>
+                    </h1>
+                </div>
+                <p class="hero__subtitle">Entrenamiento profesional. Instalaciones de primer nivel. Tu mejor versión
+                    empieza aquí.</p>
+                <div class="hero__actions">
+                    <a href="#join" class="btn btn--primary">Empieza Hoy</a>
+                    <a href="#about" class="btn btn--outline">Descubre Más</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About/Stats Section -->
+        <section id="about" class="section about">
+            <div class="container">
+                <div class="grid grid--2">
+                    <div class="about__content">
+                        <span class="badget">Sobre Nosotros</span>
+                        <h2 class="section-title">Más que un club, <br>una comunidad.</h2>
+                        <p class="section-desc">En Web Club Natación, fusionamos la técnica de alto rendimiento con un
+                            ambiente acogedor. Nuestros entrenadores olímpicos diseñan programas personalizados para
+                            cada nivel.</p>
+
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-target="15">0</span>
+                                <span class="stat-label">Años de Experticia</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" data-target="500">0</span>
+                                <span class="stat-label">Miembros Activos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about__image">
+                        <div class="image-reveal">
+                            <img src="https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=2070&auto=format&fit=crop"
+                                alt="Swimmer underwater">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section id="services" class="section services">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Nuestros Programas</h2>
+                    <p class="section-desc">Diseñados para elevar tu potencial.</p>
+                </div>
+
+                <div class="bento-grid">
+                    <div class="bento-item bento-item--large">
+                        <div class="bento-content">
+                            <h3>Alto Rendimiento</h3>
+                            <p>Entrenamiento intensivo para competidores.</p>
+                            <a href="#" class="arrow-link">→</a>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=2070&auto=format&fit=crop"
+                            alt="Swimming lanes" class="bento-bg">
+                    </div>
+                    <div class="bento-item">
+                        <div class="bento-content">
+                            <h3>Clases Grupales</h3>
+                            <p>Aprende y socializa en el agua.</p>
+                        </div>
+                        <div class="bento-overlay"></div>
+                    </div>
+                    <div class="bento-item">
+                        <div class="bento-content">
+                            <h3>Personal Trainer</h3>
+                            <p>Atención 1 a 1 para perfeccionar tu técnica.</p>
+                        </div>
+                        <div class="bento-overlay"></div>
+                    </div>
+                    <div class="bento-item bento-item--wide">
+                        <div class="bento-content">
+                            <h3>Recuperación & Spa</h3>
+                            <p>Relájate después del esfuerzo.</p>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1600965962102-9d260a3015b7?q=80&w=2070&auto=format&fit=crop"
+                            alt="Spa area" class="bento-bg">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Membership Section -->
+        <section id="membership" class="section membership">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badget">Planes</span>
+                    <h2 class="section-title">Elige tu Nivel</h2>
+                    <p class="section-desc">Membresías flexibles adaptadas a tus objetivos.</p>
+                </div>
+
+                <div class="pricing-grid">
+                    <!-- Standard Plan -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Estándar</h3>
+                            <div class="price">29€<span>/mes</span></div>
+                            <p>Acceso a piscina y vestuarios.</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Acceso ilimitado a piscina</li>
+                            <li><span class="check">✓</span> Vestuarios premium</li>
+                            <li><span class="check">✓</span> 1 Clase grupal / sem</li>
+                            <li class="disabled"><span class="cross">×</span> Entrenador personal</li>
+                        </ul>
+                        <a href="#join" class="btn btn--outline btn--block">Elegir Plan</a>
+                    </div>
+
+                    <!-- Pro Plan (Featured) -->
+                    <div class="pricing-card pricing-card--featured">
+                        <div class="popular-tag">Más Popular</div>
+                        <div class="pricing-header">
+                            <h3>Pro</h3>
+                            <div class="price">59€<span>/mes</span></div>
+                            <p>Para nadadores comprometidos.</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Todo lo de Estándar</li>
+                            <li><span class="check">✓</span> Clases grupales ilimitadas</li>
+                            <li><span class="check">✓</span> Análisis de técnica mensual</li>
+                            <li><span class="check">✓</span> Acceso a Spa</li>
+                        </ul>
+                        <a href="#join" class="btn btn--primary btn--block">Elegir Plan</a>
+                    </div>
+
+                    <!-- Elite Plan -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Elite</h3>
+                            <div class="price">99€<span>/mes</span></div>
+                            <p>Rendimiento máximo y exclusividad.</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Todo lo de Pro</li>
+                            <li><span class="check">✓</span> Entrenador Personal (2h/sem)</li>
+                            <li><span class="check">✓</span> Nutricionista deportivo</li>
+                            <li><span class="check">✓</span> Kit de bienvenida WCN</li>
+                        </ul>
+                        <a href="#join" class="btn btn--outline btn--block">Elegir Plan</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="join" class="section cta">
+            <div class="cta__bg">
+                <img src="https://images.unsplash.com/photo-1576610616656-d3aa5d1f4534?q=80&w=1974&auto=format&fit=crop"
+                    alt="Water surface">
+            </div>
+            <div class="container cta__container">
+                <h2 class="cta__title">¿Listo para saltar?</h2>
+                <p class="cta__text">Únete hoy y obtén tu primera semana de entrenamiento gratis.</p>
+                <form class="cta__form">
+                    <input type="email" placeholder="Tu correo electrónico" required>
+                    <button type="submit" class="btn btn--primary">Empezar Ahora</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <a href="#" class="logo">WCN<span class="dot">.</span></a>
+                    <p>Elevando el estándar de la natación desde 2010.</p>
+                </div>
+                <div class="footer__links">
+                    <div class="footer__col">
+                        <h4>Club</h4>
+                        <a href="#">Historia</a>
+                        <a href="#">Equipo</a>
+                        <a href="#">Carreras</a>
+                    </div>
+                    <div class="footer__col">
+                        <h4>Legal</h4>
+                        <a href="#">Privacidad</a>
+                        <a href="#">Términos</a>
+                    </div>
+                    <div class="footer__col">
+                        <h4>Social</h4>
+                        <a href="#">Instagram</a>
+                        <a href="#">Facebook</a>
+                        <a href="#">Twitter</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; 2026 Web Club Natación. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

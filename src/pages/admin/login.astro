@@ -1,0 +1,249 @@
+---
+import { supabase } from '../../lib/supabase';
+
+// Check if user is already logged in
+const { data: { session } } = await supabase.auth.getSession();
+
+if (session) {
+  return Astro.redirect('/admin/dashboard');
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - UCAM Natación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-logo">
+            <svg width="48" height="48" viewBox="0 0 40 40" fill="none">
+              <path d="M20 5C11.716 5 5 11.716 5 20C5 28.284 11.716 35 20 35C28.284 35 35 28.284 35 20C35 11.716 28.284 5 20 5Z" fill="url(#loginGradient)" />
+              <path d="M15 18C15 18 17 16 20 16C23 16 25 18 25 18M15 24C15 24 17 22 20 22C23 22 25 24 25 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="loginGradient" x1="5" y1="5" x2="35" y2="35">
+                  <stop offset="0%" stop-color="#0066cc" />
+                  <stop offset="100%" stop-color="#00b4d8" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h1 class="login-title">Panel de Administración</h1>
+          <p class="login-subtitle">UCAM Natación Ciudad de Murcia</p>
+        </div>
+
+        <form class="login-form" id="login-form">
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              required 
+              placeholder="admin@ucamnatacion.es"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Contraseña</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input" 
+              required 
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+
+          <div class="form-message" id="form-message"></div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span class="btn-text">Iniciar Sesión</span>
+            <span class="btn-loading" style="display: none;">
+              <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-dashoffset="0">
+                  <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+                </circle>
+              </svg>
+              Iniciando...
+            </span>
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <a href="/" class="login-back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Volver al sitio web
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      import { supabase } from '../../lib/supabase';
+
+      const form = document.getElementById('login-form') as HTMLFormElement;
+      const message = document.getElementById('form-message') as HTMLDivElement;
+      const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const btnText = submitBtn?.querySelector('.btn-text') as HTMLSpanElement;
+      const btnLoading = submitBtn?.querySelector('.btn-loading') as HTMLSpanElement;
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
+
+        // Show loading
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline-flex';
+        message.style.display = 'none';
+
+        try {
+          // Sign in with Supabase
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) throw error;
+
+          // Check if user is admin
+          const { data: adminUser, error: adminError } = await supabase
+            .from('admin_users')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+
+          if (adminError || !adminUser) {
+            await supabase.auth.signOut();
+            throw new Error('No tienes permisos de administrador');
+          }
+
+          // Success - redirect to dashboard
+          window.location.href = '/admin/dashboard';
+
+        } catch (error: any) {
+          message.className = 'form-message error';
+          message.textContent = error.message || 'Error al iniciar sesión';
+          message.style.display = 'block';
+          
+          submitBtn.disabled = false;
+          btnText.style.display = 'inline';
+          btnLoading.style.display = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: var(--space-md);
+  }
+
+  .login-card {
+    background: var(--color-white);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .login-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+  }
+
+  .login-title {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: var(--space-xs);
+  }
+
+  .login-subtitle {
+    color: var(--color-gray);
+    font-size: var(--text-sm);
+  }
+
+  .login-form {
+    margin-bottom: var(--space-lg);
+  }
+
+  .form-message {
+    margin-bottom: var(--space-md);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .form-message.error {
+    display: block;
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--color-accent);
+  }
+
+  .login-footer {
+    text-align: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-gray-light);
+  }
+
+  .login-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-gray);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color var(--transition-base);
+  }
+
+  .login-back-link:hover {
+    color: var(--color-primary);
+  }
+
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

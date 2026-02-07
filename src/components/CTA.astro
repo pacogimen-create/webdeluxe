@@ -1,0 +1,185 @@
+---
+// CTA (Call to Action) section
+---
+
+<section id="join" class="section cta">
+    <div class="cta__bg">
+        <img src="https://images.unsplash.com/photo-1576610616656-d3aa5d1f4534?q=80&w=1974&auto=format&fit=crop"
+            alt="Water surface">
+    </div>
+    <div class="container cta__container">
+        <h2 class="cta__title">¿Listo para saltar?</h2>
+        <p class="cta__text">Únete hoy y obtén tu primera semana de entrenamiento gratis.</p>
+        <form class="cta__form" id="emailSignupForm">
+            <input 
+                type="email" 
+                id="emailInput"
+                placeholder="Tu correo electrónico" 
+                required
+                autocomplete="email"
+            >
+            <button type="submit" class="btn btn--primary" id="submitBtn">
+                <span class="btn-text">Empezar Ahora</span>
+                <span class="btn-loader" style="display: none;">Enviando...</span>
+            </button>
+        </form>
+        <div id="formMessage" class="form-message"></div>
+    </div>
+</section>
+
+<script>
+import { submitEmailSignup } from '../scripts/emailSignup';
+
+const form = document.getElementById('emailSignupForm') as HTMLFormElement;
+const emailInput = document.getElementById('emailInput') as HTMLInputElement;
+const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+const btnText = submitBtn.querySelector('.btn-text') as HTMLSpanElement;
+const btnLoader = submitBtn.querySelector('.btn-loader') as HTMLSpanElement;
+const formMessage = document.getElementById('formMessage') as HTMLDivElement;
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = emailInput.value.trim();
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline';
+    formMessage.textContent = '';
+    formMessage.className = 'form-message';
+    
+    // Submit to Supabase
+    const result = await submitEmailSignup(email);
+    
+    // Hide loading state
+    submitBtn.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoader.style.display = 'none';
+    
+    // Show message
+    formMessage.textContent = result.message;
+    formMessage.className = `form-message ${result.success ? 'form-message--success' : 'form-message--error'}`;
+    
+    // Clear form on success
+    if (result.success) {
+        emailInput.value = '';
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+            formMessage.textContent = '';
+            formMessage.className = 'form-message';
+        }, 5000);
+    }
+});
+</script>
+
+<style>
+.cta {
+    position: relative;
+    overflow: hidden;
+    color: var(--color-white);
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+}
+
+.cta__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.cta__bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 13, 44, 0.85);
+    z-index: -1;
+}
+
+.cta__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cta__container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+}
+
+.cta__title {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.cta__text {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.9;
+}
+
+.cta__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.cta__form input {
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    font-family: inherit;
+    transition: box-shadow 0.3s ease;
+}
+
+.cta__form input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.3);
+}
+
+.cta__form button {
+    white-space: nowrap;
+}
+
+.form-message {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-message--success {
+    background-color: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+    border: 1px solid #4ade80;
+}
+
+.form-message--error {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+@media (min-width: 768px) {
+    .cta__form {
+        flex-direction: row;
+    }
+
+    .cta__form input {
+        flex: 1;
+    }
+}
+</style>

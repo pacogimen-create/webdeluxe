@@ -1,0 +1,384 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { supabase } from '../../lib/supabase';
+
+// Check authentication
+const { data: { session } } = await supabase.auth.getSession();
+
+if (!session) {
+  return Astro.redirect('/admin/login');
+}
+
+// Fetch statistics
+const { count: newsCount } = await supabase
+  .from('news')
+  .select('*', { count: 'exact', head: true });
+
+const { count: coachesCount } = await supabase
+  .from('coaches')
+  .select('*', { count: 'exact', head: true });
+
+const { count: messagesCount } = await supabase
+  .from('contact_submissions')
+  .select('*', { count: 'exact', head: true })
+  .eq('status', 'new');
+
+const { data: recentNews } = await supabase
+  .from('news')
+  .select('*')
+  .order('created_at', { ascending: false })
+  .limit(5);
+---
+
+<AdminLayout title="Dashboard">
+  <div class="admin-header">
+    <h1 class="admin-title">Dashboard</h1>
+    <p class="admin-subtitle">Bienvenido al panel de administración</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #0066cc, #00b4d8);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 3H21V21H3V3Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 7H17M7 12H17M7 17H14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Noticias</div>
+        <div class="stat-value">{newsCount || 0}</div>
+      </div>
+      <a href="/admin/news" class="stat-link">Ver todas →</a>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #06d6a0, #00b4d8);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="white" stroke-width="2"/>
+          <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Entrenadores</div>
+        <div class="stat-value">{coachesCount || 0}</div>
+      </div>
+      <a href="/admin/coaches" class="stat-link">Gestionar →</a>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #ff6b35, #f7931e);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M20 7L12 12L4 7M4 7V17C4 17.5304 4.21071 18.0391 4.58579 18.4142C4.96086 18.7893 5.46957 19 6 19H18C18.5304 19 19.0391 18.7893 19.4142 18.4142C19.7893 18.0391 20 17.5304 20 17V7C20 6.46957 19.7893 5.96086 19.4142 5.58579C19.0391 5.21071 18.5304 5 18 5H6C5.46957 5 4.96086 5.21071 4.58579 5.58579C4.21071 5.96086 4 6.46957 4 7Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Mensajes Nuevos</div>
+        <div class="stat-value">{messagesCount || 0}</div>
+      </div>
+      <a href="/admin/messages" class="stat-link">Ver mensajes →</a>
+    </div>
+  </div>
+
+  <!-- Recent News -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2 class="section-title">Noticias Recientes</h2>
+      <a href="/admin/news/create" class="btn btn-primary btn-sm">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Nueva Noticia
+      </a>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {recentNews && recentNews.length > 0 ? (
+            recentNews.map((news) => (
+              <tr>
+                <td>
+                  <div class="table-title">{news.title}</div>
+                </td>
+                <td>
+                  <span class={`status-badge ${news.published ? 'status-published' : 'status-draft'}`}>
+                    {news.published ? 'Publicado' : 'Borrador'}
+                  </span>
+                </td>
+                <td>
+                  <div class="table-date">
+                    {new Date(news.created_at).toLocaleDateString('es-ES')}
+                  </div>
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <a href={`/admin/news/edit/${news.id}`} class="action-btn">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M11.333 2.00004C11.5081 1.82494 11.716 1.68605 11.9447 1.59129C12.1735 1.49653 12.4187 1.44775 12.6663 1.44775C12.914 1.44775 13.1592 1.49653 13.3879 1.59129C13.6167 1.68605 13.8246 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.383 14.4084 2.61178C14.5032 2.84055 14.552 3.08575 14.552 3.33337C14.552 3.58099 14.5032 3.82619 14.4084 4.05497C14.3137 4.28374 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.99967 14.3334L2.99967 11L11.333 2.00004Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colspan="4" class="table-empty">
+                No hay noticias todavía. <a href="/admin/news/create">Crear la primera</a>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="admin-section">
+    <h2 class="section-title">Acciones Rápidas</h2>
+    <div class="quick-actions">
+      <a href="/admin/news/create" class="quick-action-card">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 8V24M8 16H24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Nueva Noticia</span>
+      </a>
+
+      <a href="/admin/gallery" class="quick-action-card">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="6" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+          <circle cx="11" cy="11" r="2" fill="currentColor"/>
+          <path d="M26 20L20 14L10 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Subir Fotos</span>
+      </a>
+
+      <a href="/admin/coaches" class="quick-action-card">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 16C18.2091 16 20 14.2091 20 12C20 9.79086 18.2091 8 16 8C13.7909 8 12 9.79086 12 12C12 14.2091 13.7909 16 16 16Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 26C8 22.6863 10.6863 20 14 20H18C21.3137 20 24 22.6863 24 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Añadir Entrenador</span>
+      </a>
+
+      <a href="/admin/messages" class="quick-action-card">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M26 10L16 16L6 10M6 10V22C6 22.5304 6.21071 23.0391 6.58579 23.4142C6.96086 23.7893 7.46957 24 8 24H24C24.5304 24 25.0391 23.7893 25.4142 23.4142C25.7893 23.0391 26 22.5304 26 22V10C26 9.46957 25.7893 8.96086 25.4142 8.58579C25.0391 8.21071 24.5304 8 24 8H8C7.46957 8 6.96086 8.21071 6.58579 8.58579C6.21071 8.96086 6 9.46957 6 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Ver Mensajes</span>
+      </a>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .admin-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .admin-title {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: var(--space-xs);
+  }
+
+  .admin-subtitle {
+    color: var(--color-gray);
+    font-size: var(--text-lg);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .stat-card {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-gray);
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-dark);
+  }
+
+  .stat-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    transition: color var(--transition-base);
+  }
+
+  .stat-link:hover {
+    color: var(--color-primary-dark);
+  }
+
+  .admin-section {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .section-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-dark);
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .admin-table th {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-gray);
+    border-bottom: 2px solid var(--color-gray-light);
+  }
+
+  .admin-table td {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .table-title {
+    font-weight: 600;
+    color: var(--color-dark);
+  }
+
+  .table-date {
+    color: var(--color-gray);
+    font-size: var(--text-sm);
+  }
+
+  .table-empty {
+    text-align: center;
+    padding: var(--space-2xl) !important;
+    color: var(--color-gray);
+  }
+
+  .table-empty a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  .status-published {
+    background: rgba(6, 214, 160, 0.1);
+    color: var(--color-success);
+  }
+
+  .status-draft {
+    background: rgba(108, 117, 125, 0.1);
+    color: var(--color-gray);
+  }
+
+  .table-actions {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    color: var(--color-gray);
+    transition: all var(--transition-base);
+    text-decoration: none;
+  }
+
+  .action-btn:hover {
+    background: var(--color-gray-light);
+    color: var(--color-primary);
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .quick-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    border: 2px dashed var(--color-gray-light);
+    border-radius: var(--radius-lg);
+    color: var(--color-gray);
+    text-decoration: none;
+    transition: all var(--transition-base);
+  }
+
+  .quick-action-card:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(0, 102, 204, 0.05);
+  }
+
+  .quick-action-card span {
+    font-weight: 600;
+  }
+</style>

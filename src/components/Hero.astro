@@ -1,0 +1,383 @@
+---
+// Hero component for swimming club
+---
+
+<section class="hero">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="hero-waves">
+      <svg class="wave wave-1" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,50 C300,100 900,0 1200,50 L1200,120 L0,120 Z" fill="rgba(0, 102, 204, 0.1)"></path>
+      </svg>
+      <svg class="wave wave-2" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,70 C300,20 900,100 1200,70 L1200,120 L0,120 Z" fill="rgba(0, 180, 216, 0.1)"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-badge fade-in-up">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2L12.5 7.5L18 8.5L14 12.5L15 18L10 15.5L5 18L6 12.5L2 8.5L7.5 7.5L10 2Z" fill="currentColor"/>
+        </svg>
+        <span>Club de Natación de Excelencia</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="hero-title-line">UCAM Natación</span>
+        <span class="hero-title-line hero-title-gradient">Ciudad de Murcia</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Formamos campeones dentro y fuera del agua. Únete a la familia de natación más grande de Murcia y alcanza tu máximo potencial.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#contacto" class="btn btn-primary btn-lg btn-ripple">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18C14.42 18 18 14.42 18 10C18 5.58 14.42 2 10 2ZM13 11H11V13C11 13.55 10.55 14 10 14C9.45 14 9 13.55 9 13V11H7C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9H9V7C9 6.45 9.45 6 10 6C10.55 6 11 6.45 11 7V9H13C13.55 9 14 9.45 14 10C14 10.55 13.55 11 13 11Z" fill="currentColor"/>
+          </svg>
+          Únete al Club
+        </a>
+        <a href="#horarios" class="btn btn-secondary btn-lg">
+          Ver Horarios
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat fade-in-left">
+          <div class="hero-stat-number counter" data-target="500">0</div>
+          <div class="hero-stat-label">Nadadores</div>
+        </div>
+        <div class="hero-stat fade-in-up">
+          <div class="hero-stat-number counter" data-target="15">0</div>
+          <div class="hero-stat-label">Años de Historia</div>
+        </div>
+        <div class="hero-stat fade-in-right">
+          <div class="hero-stat-number counter" data-target="50">0</div>
+          <div class="hero-stat-label">Medallas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-container">
+      <div class="hero-image-wrapper image-reveal">
+        <img 
+          src="https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=800&h=1000&fit=crop" 
+          alt="Nadador profesional en acción"
+          class="hero-image hero-float"
+          loading="eager"
+        />
+      </div>
+      
+      <!-- Floating cards -->
+      <div class="hero-card hero-card-1 card-glass">
+        <div class="hero-card-icon">🏊‍♂️</div>
+        <div class="hero-card-text">
+          <div class="hero-card-title">Entrenamiento Profesional</div>
+          <div class="hero-card-subtitle">Técnicos certificados</div>
+        </div>
+      </div>
+
+      <div class="hero-card hero-card-2 card-glass">
+        <div class="hero-card-icon">🏆</div>
+        <div class="hero-card-text">
+          <div class="hero-card-title">Competición</div>
+          <div class="hero-card-subtitle">Nivel nacional</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-scroll">
+    <div class="hero-scroll-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span>Descubre más</span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+    z-index: -1;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(0, 102, 204, 0.05) 0%, transparent 50%);
+  }
+
+  .hero-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: wave 8s ease-in-out infinite;
+  }
+
+  .wave-1 {
+    animation-delay: 0s;
+  }
+
+  .wave-2 {
+    animation-delay: -4s;
+  }
+
+  @keyframes wave {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-25%);
+    }
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.5rem 1rem;
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero-title-line {
+    display: block;
+  }
+
+  .hero-title-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: var(--text-xl);
+    color: var(--color-gray);
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
+    line-height: 1.6;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    max-width: 600px;
+    margin: 0 auto;
+    padding-top: var(--space-xl);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-number {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: var(--space-xs);
+  }
+
+  .hero-stat-number::after {
+    content: '+';
+  }
+
+  .hero-stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-gray);
+    font-weight: 600;
+  }
+
+  .hero-image-container {
+    position: relative;
+    display: none;
+  }
+
+  .hero-image-wrapper {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-2xl);
+  }
+
+  .hero-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .hero-card-1 {
+    top: 10%;
+    right: -10%;
+    animation-delay: 0s;
+  }
+
+  .hero-card-2 {
+    bottom: 15%;
+    left: -10%;
+    animation-delay: 1.5s;
+  }
+
+  .hero-card-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .hero-card-title {
+    font-weight: 700;
+    color: var(--color-dark);
+    font-size: var(--text-sm);
+  }
+
+  .hero-card-subtitle {
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-gray);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  .hero-scroll-icon {
+    color: var(--color-primary);
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(10px);
+    }
+  }
+
+  /* Desktop Layout */
+  @media (min-width: 1024px) {
+    .hero-container {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-content {
+      text-align: left;
+    }
+
+    .hero-badge {
+      margin-left: 0;
+    }
+
+    .hero-subtitle {
+      margin-left: 0;
+    }
+
+    .hero-cta {
+      justify-content: flex-start;
+    }
+
+    .hero-stats {
+      margin-left: 0;
+    }
+
+    .hero-image-container {
+      display: block;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-stats {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    .hero-stat-number {
+      font-size: var(--text-3xl);
+    }
+  }
+</style>

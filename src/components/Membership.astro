@@ -1,0 +1,212 @@
+---
+// Membership / Pricing section
+---
+
+<section id="membership" class="section membership">
+    <div class="container">
+        <div class="section-header">
+            <span class="badget">Planes</span>
+            <h2 class="section-title">Elige tu Nivel</h2>
+            <p class="section-desc">Membresías flexibles adaptadas a tus objetivos.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Standard Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Estándar</h3>
+                    <div class="price">29€<span>/mes</span></div>
+                    <p>Acceso a piscina y vestuarios.</p>
+                </div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Acceso ilimitado a piscina</li>
+                    <li><span class="check">✓</span> Vestuarios premium</li>
+                    <li><span class="check">✓</span> 1 Clase grupal / sem</li>
+                    <li class="disabled"><span class="cross">×</span> Entrenador personal</li>
+                </ul>
+                <a href="#join" class="btn btn--outline btn--block">Elegir Plan</a>
+            </div>
+
+            <!-- Pro Plan (Featured) -->
+            <div class="pricing-card pricing-card--featured">
+                <div class="popular-tag">Más Popular</div>
+                <div class="pricing-header">
+                    <h3>Pro</h3>
+                    <div class="price">59€<span>/mes</span></div>
+                    <p>Para nadadores comprometidos.</p>
+                </div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Todo lo de Estándar</li>
+                    <li><span class="check">✓</span> Clases grupales ilimitadas</li>
+                    <li><span class="check">✓</span> Análisis de técnica mensual</li>
+                    <li><span class="check">✓</span> Acceso a Spa</li>
+                </ul>
+                <a href="#join" class="btn btn--primary btn--block">Elegir Plan</a>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Elite</h3>
+                    <div class="price">99€<span>/mes</span></div>
+                    <p>Rendimiento máximo y exclusividad.</p>
+                </div>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Todo lo de Pro</li>
+                    <li><span class="check">✓</span> Entrenador Personal (2h/sem)</li>
+                    <li><span class="check">✓</span> Nutricionista deportivo</li>
+                    <li><span class="check">✓</span> Kit de bienvenida WCN</li>
+                </ul>
+                <a href="#join" class="btn btn--outline btn--block">Elegir Plan</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.membership {
+    background-color: var(--color-white);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.pricing-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-alt);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 85, 255, 0.1);
+}
+
+.pricing-card--featured {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    border: none;
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(10, 13, 44, 0.2);
+    z-index: 2;
+}
+
+@media (min-width: 992px) {
+    .pricing-card--featured {
+        transform: scale(1.1);
+    }
+
+    .pricing-card--featured:hover {
+        transform: scale(1.12);
+    }
+}
+
+.popular-tag {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card--featured .pricing-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.pricing-header h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-card--featured .price {
+    color: var(--color-white);
+}
+
+.price span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-text-light);
+}
+
+.pricing-card--featured .price span {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pricing-features {
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.pricing-features li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.check {
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.pricing-card--featured .check {
+    color: #4ade80;
+}
+
+.cross {
+    color: #ccc;
+}
+
+.disabled {
+    color: #999;
+    text-decoration: line-through;
+}
+
+.pricing-card--featured .btn--primary {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    border-color: var(--color-white);
+}
+
+.pricing-card--featured .btn--primary:hover {
+    background-color: var(--color-bg-alt);
+}
+</style>

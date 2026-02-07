@@ -1,0 +1,302 @@
+---
+// Navigation items
+const navItems = [
+  { name: 'Inicio', href: '/' },
+  { name: 'Noticias', href: '/noticias' },
+  { name: 'Equipo', href: '#equipo' },
+  { name: 'Horarios', href: '#horarios' },
+  { name: 'Contacto', href: '#contacto' },
+];
+---
+
+<nav class="navbar">
+  <div class="container navbar-container">
+    <!-- Logo -->
+    <a href="/" class="navbar-logo">
+      <div class="logo-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 5C11.716 5 5 11.716 5 20C5 28.284 11.716 35 20 35C28.284 35 35 28.284 35 20C35 11.716 28.284 5 20 5Z" fill="url(#gradient)" />
+          <path d="M15 18C15 18 17 16 20 16C23 16 25 18 25 18M15 24C15 24 17 22 20 22C23 22 25 24 25 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="gradient" x1="5" y1="5" x2="35" y2="35">
+              <stop offset="0%" stop-color="#0066cc" />
+              <stop offset="100%" stop-color="#00b4d8" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">
+        <span class="logo-main">UCAM Natación</span>
+        <span class="logo-sub">Ciudad de Murcia</span>
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <ul class="navbar-menu">
+      {navItems.map((item) => (
+        <li class="navbar-item">
+          <a href={item.href} class="navbar-link">
+            {item.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- CTA Button -->
+    <div class="navbar-actions">
+      <a href="#contacto" class="btn btn-primary btn-sm">
+        Únete al Club
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="navbar-toggle" aria-label="Toggle menu" id="navbar-toggle">
+      <span class="navbar-toggle-icon"></span>
+      <span class="navbar-toggle-icon"></span>
+      <span class="navbar-toggle-icon"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="navbar-mobile" id="navbar-mobile">
+    <ul class="navbar-mobile-menu">
+      {navItems.map((item) => (
+        <li class="navbar-mobile-item">
+          <a href={item.href} class="navbar-mobile-link">
+            {item.name}
+          </a>
+        </li>
+      ))}
+      <li class="navbar-mobile-item">
+        <a href="#contacto" class="btn btn-primary" style="width: 100%;">
+          Únete al Club
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-fixed);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-base);
+  }
+
+  .navbar-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: var(--shadow-md);
+  }
+
+  .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem var(--space-md);
+    gap: var(--space-lg);
+  }
+
+  /* Logo */
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    transition: transform var(--transition-base);
+  }
+
+  .navbar-logo:hover {
+    transform: scale(1.02);
+  }
+
+  .logo-icon {
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .logo-main {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  /* Desktop Menu */
+  .navbar-menu {
+    display: none;
+    list-style: none;
+    gap: var(--space-lg);
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-link {
+    font-weight: 600;
+    color: var(--color-dark);
+    text-decoration: none;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: color var(--transition-base);
+  }
+
+  .navbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width var(--transition-base);
+  }
+
+  .navbar-link:hover {
+    color: var(--color-primary);
+  }
+
+  .navbar-link:hover::after {
+    width: 100%;
+  }
+
+  /* Actions */
+  .navbar-actions {
+    display: none;
+  }
+
+  /* Mobile Toggle */
+  .navbar-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: var(--z-fixed);
+  }
+
+  .navbar-toggle-icon {
+    width: 24px;
+    height: 2px;
+    background: var(--color-dark);
+    border-radius: 2px;
+    transition: all var(--transition-base);
+  }
+
+  .navbar-toggle.active .navbar-toggle-icon:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .navbar-toggle.active .navbar-toggle-icon:nth-child(2) {
+    opacity: 0;
+  }
+
+  .navbar-toggle.active .navbar-toggle-icon:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* Mobile Menu */
+  .navbar-mobile {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-lg);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-base);
+  }
+
+  .navbar-mobile.active {
+    max-height: 400px;
+  }
+
+  .navbar-mobile-menu {
+    list-style: none;
+    padding: var(--space-md);
+    margin: 0;
+  }
+
+  .navbar-mobile-item {
+    margin-bottom: var(--space-sm);
+  }
+
+  .navbar-mobile-link {
+    display: block;
+    padding: var(--space-sm);
+    font-weight: 600;
+    color: var(--color-dark);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+  }
+
+  .navbar-mobile-link:hover {
+    background: var(--color-off-white);
+    color: var(--color-primary);
+  }
+
+  /* Desktop Styles */
+  @media (min-width: 768px) {
+    .navbar-menu {
+      display: flex;
+    }
+
+    .navbar-actions {
+      display: block;
+    }
+
+    .navbar-toggle {
+      display: none;
+    }
+
+    .navbar-mobile {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Mobile menu toggle
+  const toggle = document.getElementById('navbar-toggle');
+  const mobileMenu = document.getElementById('navbar-mobile');
+
+  if (toggle && mobileMenu) {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        mobileMenu.classList.remove('active');
+      });
+    });
+  }
+</script>
